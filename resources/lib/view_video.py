@@ -5,8 +5,6 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 import xbmcplugin
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
 import http_request
 import control
 import utils

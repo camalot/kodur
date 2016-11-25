@@ -24,10 +24,10 @@ class player(xbmc.Player):
         item.setInfo(type='Pictures', infoLabels={"title": self.title, "picturepath": meta["url"]})
 
         # control.player.play(meta["url"], item)
-        # playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
-        # playlist.clear()
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        playlist.clear()
         # playlist.add(meta["url"], item)
-        xbmc.executebuiltin("PlayerControl(RepeatNone)")
+        # xbmc.executebuiltin("PlayerControl(RepeatNone)")
         # control.player.play(playlist)
 
         ss_url = '%s?action=slideshow&image_url=%s' % (sys.argv[0], urllib.quote_plus(meta["url"]))
@@ -35,7 +35,7 @@ class player(xbmc.Player):
         xbmc.executebuiltin("SlideShow(%s)" % ss_url)
 
         # xbmc.executebuiltin("PlayerControl(RepeatAll)")
-        # time.sleep(5)
+        time.sleep(5)
         return
 
 

@@ -17,13 +17,19 @@ class Main:
         data = api.get_album(album_id)["album"]
         images = data["images"]
         for img in images:
-            if img["type"] not in api.video_types:
-                xbmc.log("not video")
+            if img["type"] not in api.video_types or not img["animated"]:
                 image = img["link"]
                 thumb = api.url_image_thumb % img["id"]
+                xbmc.log("add image: %s" % image)
                 utils.add_image(utils.text_blue % img["title"], thumb, image)
             else:
-                url = img["mp4"]
+                # not all have mp4
+                if "mp4" in img:
+                    url = img["mp4"]
+                elif "gifv" in img:
+                    url = img["gifv"]
+                else:
+                    url = img["link"]
                 thumb = api.url_image_thumb % img["id"]
                 utils.add_video(utils.text_blue % img["title"], thumb, url)
 

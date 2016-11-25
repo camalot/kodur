@@ -9,12 +9,13 @@ import xbmc
 
 class Main:
     def __init__(self):
-        self.params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
+        params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         utils.set_no_sort()
 
-        self.type = urllib.unquote_plus(self.params.get("type", 'default'))
-        self.section = urllib.unquote_plus(self.params.get("section", ''))
-        self.sort = urllib.unquote_plus(self.params.get("sort", ''))
+        self.page = int(urllib.unquote_plus(params.get("page", '0')))
+        self.type = urllib.unquote_plus(params.get("type", 'default'))
+        self.section = urllib.unquote_plus(params.get("section", ''))
+        self.sort = urllib.unquote_plus(params.get("sort", ''))
         if self.section == '':
             self.display_section_choice()
         elif self.sort == '':
@@ -53,21 +54,20 @@ class Main:
     def browse_gallery(self, type=None):
         api = imgur.Api()
         if type == 'reddit':
-            data = api.get_reddit_gallery(self.section, self.sort, "all", 0)
+            data = api.get_reddit_gallery(self.section, self.sort, "all", self.page)
         else:
-            data = api.get_gallery(self.section, self.sort, "all", 0, False)
+            data = api.get_gallery(self.section, self.sort, "all", self.page, False)
         for g in data["galleries"]:
-            xbmc.log(json.dumps(g))
             if "cover" in g:
                 xbmc.log("album")
                 thumb = api.url_image_medium % g["cover"]
                 icon = api.url_image_thumb % g["cover"]
                 utils.add_directory(g["title"], icon, thumb, "%s?action=album&id=%s" % (sys.argv[0], g["id"]))
             else:
-                xbmc.log("NOT album")
-                if g["type"] not in api.video_types:
+                if g["type"] not in api.video_types or not g["animated"]:
                     image = g["link"]
                     thumb = api.url_image_thumb % g["id"]
+                    xbmc.log("add image: %s" % image)
                     utils.add_image(utils.text_blue % g["title"], thumb, image)
                 else:
                     # not all have mp4
@@ -79,5 +79,9 @@ class Main:
                         url = g["link"]
                     thumb = api.url_image_thumb % g["id"]
                     utils.add_video(utils.text_blue % g["title"], thumb, url)
+
+        next_page = self.page + 1
+        utils.add_next_page("%s%s?action=gallery&page=%s&section=%s&sort=%s&type=%s" %
+                            (sys.argv[0], next_page, next_page, self.section, self.sort, self.type), next_page + 1)
 
         control.directory_end(force_thumb=True)
