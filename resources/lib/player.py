@@ -23,27 +23,13 @@ class player(xbmc.Player):
         item = control.item(path=meta["url"], iconImage=meta["thumb"], thumbnailImage=meta["thumb"])
         item.setInfo(type='Pictures', infoLabels={"title": self.title, "picturepath": meta["url"]})
 
-        # control.player.play(meta["url"], item)
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        playlist.clear()
-        # playlist.add(meta["url"], item)
-        # xbmc.executebuiltin("PlayerControl(RepeatNone)")
-        # control.player.play(playlist)
-
         ss_url = '%s?action=slideshow&image_url=%s' % (sys.argv[0], urllib.quote_plus(meta["url"]))
         xbmc.log("SlideShow(%s)" % ss_url)
         xbmc.executebuiltin("SlideShow(%s)" % ss_url)
-
-        # xbmc.executebuiltin("PlayerControl(RepeatAll)")
-        time.sleep(5)
         return
 
-
     def run(self, meta):
-
-        # if control.window.getProperty('PseudoTVRunning') == 'True':
-        #    return control.player.play(url, control.item(path=url))
-
+        loop_vid = control.setting("loop_vid") == 'true'
         self.getVideoInfo(meta)
         if meta["thumb"] is None:
             meta["thumb"] = "DefaultVideo.png"
@@ -60,7 +46,8 @@ class player(xbmc.Player):
         playlist.clear()
         playlist.add(meta["url"], item)
         control.player.play(playlist)
-        xbmc.executebuiltin("PlayerControl(RepeatAll)")
+        if loop_vid:
+            xbmc.executebuiltin("PlayerControl(RepeatAll)")
 
         for i in range(0, 240):
             if self.isPlayingVideo(): break

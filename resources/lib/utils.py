@@ -68,11 +68,16 @@ def add_next_page(item_url, page):
 
 def add_gallery_item(item):
     api = imgur.Api()
+    allow_nsfw = control.setting("enable_nsfw") == 'true'
+
     if "cover" in item:
         thumb = api.url_image_medium % item["cover"]
         icon = api.url_image_thumb % item["cover"]
         add_directory(item["title"], icon, thumb, "%s?action=album&id=%s" % (sys.argv[0], item["id"]))
     else:
+        if "nsfw" in item and item["nsfw"] and not allow_nsfw:
+            return
+
         if item["type"] not in api.video_types or not item["animated"]:
             image = item["link"]
             thumb = api.url_image_thumb % item["id"]
