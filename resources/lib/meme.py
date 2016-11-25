@@ -9,10 +9,12 @@ import xbmc
 
 class Main:
     def __init__(self):
-        self.params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
+        params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         utils.set_no_sort()
+        self.sort = urllib.unquote_plus(params.get("sort", ''))
+        self.page = int(urllib.unquote_plus(params.get("page", '0')))
 
-        if "sort" not in self.params or self.params["sort"] is None:
+        if self.sort == '':
             self.display_sort_choice()
         else:
             self.browse_gallery()
@@ -32,20 +34,8 @@ class Main:
 
     def browse_gallery(self):
         api = imgur.Api()
-        data = api.get_meme_gallery(self.params["sort"], "day", 0)
+        data = api.get_meme_gallery(self.sort, "all", self.page)
         for g in data["memes"]:
-            if "cover" in g:
-                thumb = api.url_image_medium % g["cover"]
-                icon = api.url_image_thumb % g["cover"]
-                utils.add_directory(g["title"], icon, thumb, "%s?action=album&id=%s" % (sys.argv[0], g["id"]))
-            else:
-                if g["type"] not in api.video_types:
-                    image = g["link"]
-                    thumb = api.url_image_thumb % g["id"]
-                    utils.add_image(utils.text_blue % g["title"], thumb, image)
-                else:
-                    url = g["mp4"]
-                    thumb = api.url_image_thumb % g["id"]
-                    utils.add_video(utils.text_blue % g["title"], thumb, url)
+            utils.add_gallery_item(g)
 
         control.directory_end(force_thumb=True)

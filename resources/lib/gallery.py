@@ -7,13 +7,14 @@ import imgur
 import json
 import xbmc
 
+
 class Main:
     def __init__(self):
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         utils.set_no_sort()
 
         self.page = int(urllib.unquote_plus(params.get("page", '0')))
-        self.type = urllib.unquote_plus(params.get("type", 'default'))
+        self.gallery_type = urllib.unquote_plus(params.get("type", 'default'))
         self.section = urllib.unquote_plus(params.get("section", ''))
         self.sort = urllib.unquote_plus(params.get("sort", ''))
         if self.section == '':
@@ -21,7 +22,7 @@ class Main:
         elif self.sort == '':
             self.display_sort_choice()
         else:
-            self.browse_gallery(self.type)
+            self.browse_gallery(self.gallery_type)
         return
 
     def display_section_choice(self, close_directory=True):
@@ -36,13 +37,13 @@ class Main:
         return
 
     def display_sort_choice(self, close_directory=True):
-        if not self.type == 'reddit':
+        if not self.gallery_type == 'reddit':
             utils.add_directory(utils.text_blue % control.lang(30604), utils.icon_folder, None,
                                 "%s?action=gallery&section=%s&sort=viral" % (sys.argv[0], self.section))
         utils.add_directory(utils.text_blue % control.lang(30605), utils.icon_folder, None,
-                            "%s?action=gallery&section=%s&sort=top&type=%s" % (sys.argv[0], self.section, self.type))
+                            "%s?action=gallery&section=%s&sort=top&type=%s" % (sys.argv[0], self.section, self.gallery_type))
         utils.add_directory(utils.text_blue % control.lang(30606), utils.icon_folder, None,
-                            "%s?action=gallery&section=%s&sort=time&type=%s" % (sys.argv[0], self.section, self.type))
+                            "%s?action=gallery&section=%s&sort=time&type=%s" % (sys.argv[0], self.section, self.gallery_type))
         if self.section == 'user':
             utils.add_directory(utils.text_blue % control.lang(30607), utils.icon_folder, None,
                                 "%s?action=gallery&section=%s&sort=rising" % (sys.argv[0], self.section))
@@ -51,37 +52,17 @@ class Main:
             control.directory_end(force_thumb=False)
         return
 
-    def browse_gallery(self, type=None):
+    def browse_gallery(self, gallery_type=None):
         api = imgur.Api()
-        if type == 'reddit':
+        if gallery_type == 'reddit':
             data = api.get_reddit_gallery(self.section, self.sort, "all", self.page)
         else:
             data = api.get_gallery(self.section, self.sort, "all", self.page, False)
         for g in data["galleries"]:
-            if "cover" in g:
-                xbmc.log("album")
-                thumb = api.url_image_medium % g["cover"]
-                icon = api.url_image_thumb % g["cover"]
-                utils.add_directory(g["title"], icon, thumb, "%s?action=album&id=%s" % (sys.argv[0], g["id"]))
-            else:
-                if g["type"] not in api.video_types or not g["animated"]:
-                    image = g["link"]
-                    thumb = api.url_image_thumb % g["id"]
-                    xbmc.log("add image: %s" % image)
-                    utils.add_image(utils.text_blue % g["title"], thumb, image)
-                else:
-                    # not all have mp4
-                    if "mp4" in g:
-                        url = g["mp4"]
-                    elif "gifv" in g:
-                        url = g["gifv"]
-                    else:
-                        url = g["link"]
-                    thumb = api.url_image_thumb % g["id"]
-                    utils.add_video(utils.text_blue % g["title"], thumb, url)
+            utils.add_gallery_item(g)
 
         next_page = self.page + 1
         utils.add_next_page("%s%s?action=gallery&page=%s&section=%s&sort=%s&type=%s" %
-                            (sys.argv[0], next_page, next_page, self.section, self.sort, self.type), next_page + 1)
+                            (sys.argv[0], next_page, next_page, self.section, self.sort, self.gallery_type), next_page + 1)
 
         control.directory_end(force_thumb=True)

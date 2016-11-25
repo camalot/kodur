@@ -10,6 +10,7 @@ class Api:
     url_gallery = "%s/gallery/%s/%s/%s/%s?showViral=%s"
     url_reddit_gallery = "%s/gallery/r/%s/%s/%s/%s"
     url_meme_gallery = "%s/g/memes/%s/%s/%s"
+    url_random_gallery = "%s/gallery/random/random/%s"
 
     url_album = "%s/album/%s"
     url_image = "%s/image/%s"
@@ -38,6 +39,13 @@ class Api:
 
     def get_reddit_gallery(self, reddit, sort='time', window='all', page=0):
         url = self.url_reddit_gallery % (self.url_root, reddit, sort, window, page)
+        result = http_request.get(url, self._authorization_header())
+        json_obj = json.loads(result)["data"]
+
+        return {"galleries": json_obj, "totalResultCount": len(json_obj)}
+
+    def get_random_gallery(self, page=0):
+        url = self.url_random_gallery % (self.url_root, page)
         result = http_request.get(url, self._authorization_header())
         json_obj = json.loads(result)["data"]
 

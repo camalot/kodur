@@ -4,7 +4,9 @@ import utils
 import urllib
 import xbmc
 
+
 class Main:
+
     def __init__(self):
         self.params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         if self.params["action"] == "reddit_add":

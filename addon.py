@@ -44,6 +44,8 @@ elif action == 'album':
     import album as plugin
 elif action == 'gallery':
     import gallery as plugin
+elif action == 'random':
+    import random_gallery as plugin
 elif action == 'meme':
     import meme as plugin
 elif action == 'reddit' or action == 'reddit_add':

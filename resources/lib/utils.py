@@ -8,8 +8,7 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import control
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
+import imgur
 import http_request
 from datetime import timedelta
 
@@ -48,24 +47,16 @@ def add_video(title, thumbnail, video_url):
     control.addItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item, isFolder=False)
 
 
-def add_image(title, thumbnail, image_url):
+def add_image(title, thumbnail, image_url, slideshow=False):
     list_item = control.item(title, iconImage="DefaultPicture.png", thumbnailImage=thumbnail, path=image_url)
     list_item.setInfo(type="pictures", infoLabels={"title": title, "exif:path": image_url, "picturepath": image_url})
     list_item.setArt({"thumb": thumbnail})
     list_item.setProperty(u'fanart_image', image_url)
-    plugin_play_url = '%s?action=view&image_url=%s' % (sys.argv[0], urllib.quote_plus(image_url))
-    control.addItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item)
-    # control.addItem(handle=int(sys.argv[1]), url=image_url, listitem=list_item)
-
-
-def add_slideshow_image(title, thumbnail, image_url):
-    list_item = control.item(title, iconImage="DefaultPicture.png", thumbnailImage=thumbnail, path=image_url)
-    list_item.setInfo(type="pictures", infoLabels={"title": title, "exif:path": image_url, "picturepath": image_url})
-    list_item.setArt({"thumb": thumbnail})
-    list_item.setProperty(u'fanart_image', image_url)
-    # plugin_play_url = '%s?action=view&image_url=%s' % (sys.argv[0], urllib.quote_plus(image_url))
-    # control.addItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item)
-    control.addItem(handle=int(sys.argv[1]), url=image_url, listitem=list_item)
+    if slideshow:
+        control.addItem(handle=int(sys.argv[1]), url=image_url, listitem=list_item)
+    else:
+        plugin_play_url = '%s?action=view&image_url=%s' % (sys.argv[0], urllib.quote_plus(image_url))
+        control.addItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item)
 
 
 def add_next_page(item_url, page):
@@ -73,6 +64,31 @@ def add_next_page(item_url, page):
                              iconImage=icon_next, thumbnailImage=icon_next)
     control.addItem(handle=int(sys.argv[1]), url=item_url, listitem=list_item, isFolder=True)
     return
+
+
+def add_gallery_item(item):
+    api = imgur.Api()
+    if "cover" in item:
+        thumb = api.url_image_medium % item["cover"]
+        icon = api.url_image_thumb % item["cover"]
+        add_directory(item["title"], icon, thumb, "%s?action=album&id=%s" % (sys.argv[0], item["id"]))
+    else:
+        if item["type"] not in api.video_types or not item["animated"]:
+            image = item["link"]
+            thumb = api.url_image_thumb % item["id"]
+            add_image(text_blue % item["title"], thumb, image)
+        else:
+            # not all have mp4
+            if "mp4" in item:
+                url = item["mp4"]
+            elif "gifv" in item:
+                url = item["gifv"]
+            else:
+                url = item["link"]
+            thumb = api.url_image_thumb % item["id"]
+            add_video(text_blue % item["title"], thumb, url)
+    return
+
 
 def add_subreddit(subreddit):
     _init_subreddits_file()
@@ -132,11 +148,6 @@ def get_subreddits():
                 subreddit = spl[i].strip()
                 entries.append(subreddit.title())
     entries.sort()
-    # for entry in entries:
-    #     if entry.lower() == "all":
-    #         addDir(entry, entry.lower(), 'listSorting', "")
-    #     else:
-    #         addDirR(entry, entry.lower(), 'listSorting', "")
     return entries
 
 
