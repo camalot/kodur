@@ -13,5 +13,9 @@
 		<platform>all</platform>
 		<summary>Imgur browser</summary>
 		<description>Imgur browser</description>
+		<license>APACHE 2.0 LICENSE</license>
+		<website>https://github.com/camalot/kodur</website>
+		<source>https://github.com/camalot/kodur</source>
+		<language>en</language>
 	</extension>
 </addon>
