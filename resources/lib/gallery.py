@@ -2,7 +2,7 @@ import sys
 import control
 import utils
 import urllib
-import xbmc
+import time
 import imgur
 import json
 import xbmc
@@ -26,12 +26,14 @@ class Main:
         return
 
     def display_section_choice(self, close_directory=True):
+        epoch_time = int(time.time())
+
         utils.add_directory(utils.text_blue % control.lang(30601), utils.icon_folder, None,
-                            "%s?action=gallery&section=hot" % (sys.argv[0]))
+                            "%s%s?action=gallery&section=hot" % (sys.argv[0], epoch_time))
         utils.add_directory(utils.text_blue % control.lang(30602), utils.icon_folder, None,
-                            "%s?action=gallery&section=top" % (sys.argv[0]))
+                            "%s%s?action=gallery&section=top" % (sys.argv[0], epoch_time))
         utils.add_directory(utils.text_blue % control.lang(30603), utils.icon_folder, None,
-                            "%s?action=gallery&section=user" % (sys.argv[0]))
+                            "%s%s?action=gallery&section=user" % (sys.argv[0], epoch_time))
         if close_directory:
             control.directory_end(force_thumb=False)
         return
@@ -53,6 +55,8 @@ class Main:
         return
 
     def browse_gallery(self, gallery_type=None):
+        epoch_time = int(time.time())
+
         api = imgur.Api()
         if gallery_type == 'reddit':
             data = api.get_reddit_gallery(self.section, self.sort, "all", self.page)
@@ -63,6 +67,7 @@ class Main:
 
         next_page = self.page + 1
         utils.add_next_page("%s%s?action=gallery&page=%s&section=%s&sort=%s&type=%s" %
-                            (sys.argv[0], next_page, next_page, self.section, self.sort, self.gallery_type), next_page + 1)
+                            (sys.argv[0], epoch_time, next_page, self.section, self.sort, self.gallery_type),
+                            next_page + 1)
 
         control.directory_end(force_thumb=True)

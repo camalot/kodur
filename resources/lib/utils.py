@@ -26,6 +26,7 @@ image_ext = [".jpg", ".jpeg", ".png", ".bmp", ".webp"]
 
 text_green = "[B][COLOR green][UPPERCASE]%s[/UPPERCASE][/COLOR][/B]"
 text_blue = "[B][COLOR blue]%s[/COLOR][/B]"
+text_red = "[B][COLOR red]%s[/COLOR][/B]"
 
 text_topic = "[B][COLOR purple]%s[/COLOR][/B]"
 text_heading = "[B][COLOR white][UPPERCASE]%s[/UPPERCASE][/COLOR][/B]"
@@ -75,13 +76,17 @@ def add_gallery_item(item):
         icon = api.url_image_thumb % item["cover"]
         add_directory(item["title"], icon, thumb, "%s?action=album&id=%s" % (sys.argv[0], item["id"]))
     else:
-        if "nsfw" in item and item["nsfw"] and not allow_nsfw:
+        is_nsfw = "nsfw" in item and item["nsfw"]
+        if is_nsfw and not allow_nsfw:
             return
+
+        text_dec = text_red if is_nsfw else text_blue
 
         if item["type"] not in api.video_types or not item["animated"]:
             image = item["link"]
             thumb = api.url_image_thumb % item["id"]
-            add_image(text_blue % item["title"], thumb, image)
+
+            add_image(text_dec % item["title"], thumb, image)
         else:
             # not all have mp4
             if "mp4" in item:
@@ -91,7 +96,7 @@ def add_gallery_item(item):
             else:
                 url = item["link"]
             thumb = api.url_image_thumb % item["id"]
-            add_video(text_blue % item["title"], thumb, url)
+            add_video(text_dec % item["title"], thumb, url)
     return
 
 

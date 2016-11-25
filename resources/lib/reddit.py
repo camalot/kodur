@@ -2,7 +2,7 @@ import sys
 import control
 import utils
 import urllib
-import xbmc
+import time
 
 
 class Main:
@@ -17,6 +17,7 @@ class Main:
 
     def render_reddit_list(self):
         utils.set_no_sort()
+        epoch_time = int(time.time())
         utils.add_directory(utils.text_green % control.lang(30502), utils.icon_settings, None,
                             "%s?action=settings" % (sys.argv[0]))
 
@@ -26,7 +27,7 @@ class Main:
         reddits = utils.get_subreddits()
         for sr in reddits:
             utils.add_directory(sr.title(), utils.icon_folder, None,
-                                "%s?action=gallery&section=%s&type=reddit" % (
-                                    sys.argv[0], urllib.quote_plus(sr.title())))
+                                "%s%s?action=gallery&section=%s&type=reddit" % (
+                                    sys.argv[0], epoch_time, urllib.quote_plus(sr.title())))
         control.directory_end(force_thumb=False)
         return

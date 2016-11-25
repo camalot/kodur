@@ -2,7 +2,7 @@ import sys
 import control
 import utils
 import urllib
-import xbmc
+import time
 import imgur
 import json
 import xbmc
@@ -18,6 +18,8 @@ class Main:
         return
 
     def browse_gallery(self):
+        epoch_time = int(time.time())
+
         api = imgur.Api()
         data = api.get_random_gallery(self.page)
         for g in data["galleries"]:
@@ -25,6 +27,6 @@ class Main:
 
         next_page = self.page + 1
         utils.add_next_page("%s%s?action=random&page=%s" %
-                            (sys.argv[0], next_page, next_page), next_page + 1)
+                            (sys.argv[0], epoch_time, next_page), next_page + 1)
 
         control.directory_end(force_thumb=True)
