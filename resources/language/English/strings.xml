@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+  <string id="30000">KoChanDi</string>
+
+  <!--
+   * Settings labels
+   -->
+    <string id="30100">Version</string>
+    <string id="30101">Author</string>
+    <string id="30102">Website</string>
+    <string id="30500">Page %i</string>
+    <string id="30501">Search</string>
+
+    <string id="30502">Settings</string>
+
+    <string id="30503">Galleries</string>
+    <string id="30504">Memes</string>
+    <string id="30505">Reddit Galleries</string>
+    <string id="30506">Random</string>
+    <string id="30507">Gallery Tags</string>
+    <string id="30508">Add reddit</string>
+
+    <string id="30601">Hot</string>
+    <string id="30602">Top</string>
+    <string id="30603">User</string>
+
+    <string id="30604">Viral</string>
+    <string id="30605">Top</string>
+    <string id="30606">Time</string>
+    <!-- only for User -->
+    <string id="30607">Rising</string>
+
+
+
+
+    <string id="30800">General</string>
+
+    <string id="30900">Show NSFW Images</string>
+    <string id="30901">Loop Animated Images</string>
+
+</strings>

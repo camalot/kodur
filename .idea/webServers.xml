@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="aa6d4abc-916e-4fe7-b6a6-576404c0884a" name="ToKodiLocal" url="http://localhost">
+        <fileTransfer port="0" mountedRoot="C:\Users\rconr\AppData\Roaming\kodi\addons\plugin.image.kodur" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
