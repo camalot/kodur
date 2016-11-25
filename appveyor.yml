@@ -4,6 +4,9 @@ pull_requests:
 skip_tags: true
 install:
 - ps: .\.appveyor\appveyor.install.ps1
+environment:
+  KODUR_CLIENT_ID:
+    secure: otH+gNaUNEMp2drNzvxY9A==
 before_build:
 - ps: .\.appveyor\appveyor.before-build.ps1
 build:
