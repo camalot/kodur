@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <!--<setting id="video_format" type="enum" label="30300" default="0"   lvalues="30301|30302|30303" />-->
+
+    <category label="30800">
+        <setting label="30900" type="bool" id="enable_nsfw" default="false" />
+        <setting label="30901" type="bool" id="loop_vid" default="true" />
+    </category>
+</settings>
