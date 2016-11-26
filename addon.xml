@@ -18,4 +18,11 @@
 		<source>https://github.com/camalot/kodur</source>
 		<language>en</language>
 	</extension>
+
+	<extension point="xbmc.addon.repository"
+              name="camalot's repository">
+    <info compressed="true">https://camalot.github.io/repository.camalot/addons/addons.xml</info>
+    <checksum>https://camalot.github.io/repository.camalot/addons/addons.xml.md5</checksum>
+    <datadir zip="true">https://camalot.github.io/repository.camalot/addons/plugin.image.kodur</datadir>
+  </extension>
 </addon>
