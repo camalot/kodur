@@ -14,15 +14,17 @@
 		<summary>Imgur browser</summary>
 		<description>Imgur browser</description>
 		<license>APACHE 2.0 LICENSE</license>
-		<website>https://github.com/camalot/kodur</website>
-		<source>https://github.com/camalot/kodur</source>
+		<license><![CDATA[http://www.apache.org/licenses/LICENSE-2.0]]></license>
+		<source><![CDATA[https://github.com/camalot/kodur]]></source>
+		<website><![CDATA[https://github.com/camalot/kodur]]></website>
+
 		<language>en</language>
 	</extension>
 
-	<extension point="xbmc.addon.repository"
-              name="camalot's repository">
-		<info compressed="true">https://camalot.github.io/repository.camalot/addons.xml</info>
-		<checksum>https://camalot.github.io/repository.camalot/addons.xml.md5</checksum>
-		<datadir zip="true">https://camalot.github.io/repository.camalot/plugin.image.kodur</datadir>
-  	</extension>
+	<!--<extension point="xbmc.addon.repository"-->
+              <!--name="camalot's repository">-->
+		<!--<info compressed="true">https://camalot.github.io/repository.camalot/addons.xml</info>-->
+		<!--<checksum>https://camalot.github.io/repository.camalot/addons.xml.md5</checksum>-->
+		<!--<datadir zip="true">https://camalot.github.io/repository.camalot/</datadir>-->
+  	<!--</extension>-->
 </addon>
